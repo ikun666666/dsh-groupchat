@@ -31,14 +31,20 @@ DSH（DeepSeek Harness）插件：**给每个工程一个群聊页** —— 把�
 dsh plugin --profile web install https://github.com/ikun666666/dsh-groupchat
 ```
 
-装完重启 DSH，会话界面就会出现「群聊」标签。
-
-如果你的 dsh CLI 不支持直接装 git 地址，克隆后装本地路径，效果相同：
+**中国大陆网络直连 GitHub 常失败**（`dsh plugin` 底层的 git 命令不走系统代理），改用 gitee 镜像地址即可，内容一致：
 
 ```bash
-git clone https://github.com/ikun666666/dsh-groupchat
+dsh plugin --profile web install https://gitee.com/jaxleon/dsh-groupchat
+```
+
+也可以克隆到本地后装本地路径（地址任选其一）：
+
+```bash
+git clone https://gitee.com/jaxleon/dsh-groupchat
 dsh plugin --profile web install ./dsh-groupchat
 ```
+
+装完重启 DSH，会话界面就会出现「群聊」标签；在 DSH 设置页的「添加插件」里填以上地址，效果相同。
 
 ## 注意
 
