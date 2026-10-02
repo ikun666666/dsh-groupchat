@@ -52,7 +52,7 @@ dsh plugin --profile web install ./dsh-groupchat
 
 - 群、消息、成员昵称都存**进程内存**（每组保留 200 条），重启 DSH 清空；@ 候选会从工作区的持久会话自动重建。
 - @ 解析按昵称取第一个匹配，所以 `groupchat_nick` 会拒绝与现有成员重名。
-- **启停请直接重启 DSH**，不要在设置页里「禁用 → 启用」：本版本 DSH 的 webserver 在禁用时不会注销已注册的路由，重新启用会撞 `duplicate exact route "/groupchat"` 而报「启用失败」（插件本身没问题，重启即恢复）。
+- **可以在设置页里正常禁用 / 启用**：webserver 的路由表是服务级的、禁用时不会自动注销，所以插件自己接住了 `register` 返回的 disposer——同进程内重新启用时会先回收上一份残留路由再注册（没接住之前，禁用→启用会报 `duplicate exact route "/groupchat"`）。
 - 在 DSH 0.2.0-rc.2（官方桌面端）上开发与测试。
 
 ## License
