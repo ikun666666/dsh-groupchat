@@ -1,0 +1,5 @@
+# dsh-groupchat 的 bundle patch：只插一行 host 插件。
+# client 半由 package.json 的 dsh.client 声明，不在这里出现。
+- insert:
+    - id: groupchat
+      name: 'dsh-groupchat'
