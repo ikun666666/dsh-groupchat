@@ -1,9 +1,9 @@
 {
   "name": "dsh-groupchat",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
-  "description": "Per-project group chat between running agent sessions and the human, with @-mention wake-up.",
+  "description": "给每个工程一个群聊：运行中的 AI 会话与人自动同群，@ 可唤醒离线会话、@创建成员 可新建成员。",
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
