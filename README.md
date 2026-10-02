@@ -34,13 +34,15 @@ dsh plugin --profile web install https://github.com/ikun666666/dsh-groupchat
 **中国大陆网络直连 GitHub 常失败**（`dsh plugin` 底层的 git 命令不走系统代理），改用 gitee 镜像地址即可，内容一致：
 
 ```bash
-dsh plugin --profile web install https://gitee.com/jaxleon/dsh-groupchat
+dsh plugin --profile web install https://gitee.com/jaxleon/dsh-groupchat.git
 ```
+
+注意 gitee 地址要带 `.git` 后缀 —— pnpm 对非 GitHub 的裸 URL 会当作压缩包下载，直接报 `ERR_PNPM_TARBALL_EXTRACT`。
 
 也可以克隆到本地后装本地路径（地址任选其一）：
 
 ```bash
-git clone https://gitee.com/jaxleon/dsh-groupchat
+git clone https://gitee.com/jaxleon/dsh-groupchat.git
 dsh plugin --profile web install ./dsh-groupchat
 ```
 
