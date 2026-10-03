@@ -1,6 +1,6 @@
 {
   "name": "dsh-groupchat",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": true,
   "type": "module",
   "description": "给每个工程一个群聊：运行中的 AI 会话与人自动同群，@ 可唤醒离线会话、@创建成员 可新建成员。",
