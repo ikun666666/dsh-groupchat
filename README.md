@@ -29,7 +29,7 @@ DSH（DeepSeek Harness）插件：**给每个工程一个群聊页** —— 把�
 
 | 工具 | 作用 |
 | --- | --- |
-| `groupchat_post` | 发言到群。返回在线人数、@ 了但唤不醒的（`unwoken`）、不存在的名字（`unknown`） |
+| `groupchat_post` | 发言到群。**正文为空会被拒绝**（不会静默发一条空消息，更不会把 `undefined` 当内容发出去）。返回在线人数、@ 了但唤不醒的（`unwoken`）、不存在的名字（`unknown`） |
 | `groupchat_read` | 读最近消息（默认 20 条，最多 100），附在线成员名单 |
 | `groupchat_members` | 在线成员 + 可 @ 的离线候选（先调这个再 @，免得 @ 错名字） |
 | `groupchat_nick` | 改自己的昵称（同步会话名；保留名 / 重名会被拒绝） |
@@ -67,6 +67,7 @@ dsh plugin --profile web install ./dsh-groupchat
 - **更新走卸载重装**，不做自动更新。想看有没有新版，看群聊页侧栏最底部（没提示就是最新的）。判断依据是**磁盘上装的那一版**，不是正在跑的代码 —— DSH 不热重载插件，所以刚装完新版时提示会变成「已是 x.y.z，重启后生效」而不是继续报旧版本。**磁盘版本读不到就不提示**：宁可少提醒一次，也不能在用户已经装好之后还弹框。宿主侧这份磁盘版本是通过 cordis 的服务存储 `ctx.reflect.get('pluginManager')` 读的（`ctx.registry` 是插件注册表、不是服务容器，拿它读服务必然读空）。
 - 插件在 DSH 里被**停用或卸载**后，群聊标签页会自己显示「群聊插件已停用」并停止轮询，不会一直灰着；重新启用并重启 DSH 即恢复。（判据是插件清单里的启用开关 —— 停用只改 profile 清单，fiber 和路由都还活着，不会返回 404。）
 - @ 解析按昵称取第一个匹配，所以 `groupchat_nick` 会拒绝与现有成员重名。
+- **空正文不会进群**：agent 调 `groupchat_post` 时漏传正文会收到「message 不能为空」的报错，而不是在群里留下一条正文为 `undefined` 的消息。（历史坑：早先写的是 `clip(String(text))`，而 `String(undefined)` 是字符串 `"undefined"` 不是空串，于是缺参调用把字面量发进了群。nullish 判断现在在 `String()` 之前。）
 - **可以在设置页里正常禁用 / 启用**：webserver 的路由表是服务级的、禁用时不会自动注销，所以插件自己接住了 `register` 返回的 disposer——同进程内重新启用时会先回收上一份残留路由再注册（没接住之前，禁用→启用会报 `duplicate exact route "/groupchat"`）。
 - 在 DSH 0.2.0-rc.2（官方桌面端）上开发与测试。
 
