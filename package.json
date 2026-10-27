@@ -20,6 +20,9 @@
     "lib/index.js",
     "lib/client.js"
   ],
+  "scripts": {
+    "smoke": "node scripts/smoke.mjs"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
