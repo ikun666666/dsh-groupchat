@@ -208,6 +208,29 @@ const findGroup = payload => payload?.groups?.find(group => group.key === 'proj'
   if (after !== before) fail('a plugin-injected message created a ticket')
 }
 
+// 7. 认可方式开关：切到 manual 后 payload 里读得到，切回 auto 也读得到。
+{
+  const on = await call('POST', '/groupchat', { action: 'approval-mode', group: 'proj', mode: 'manual' })
+  if (on.json?.ok !== true) fail(`approval-mode manual rejected: ${JSON.stringify(on.json)}`)
+  if (findGroup((await call('GET', '/groupchat')).json)?.approvalMode !== 'manual') {
+    fail('payload did not report approvalMode=manual')
+  }
+  await call('POST', '/groupchat', { action: 'approval-mode', group: 'proj', mode: 'auto' })
+  if (findGroup((await call('GET', '/groupchat')).json)?.approvalMode !== 'auto') {
+    fail('payload did not report approvalMode=auto')
+  }
+}
+
+// 8. 手工认可只对「待认可」生效：还在待转化的单必须被拒（409 not-awaiting）。
+{
+  const group = findGroup((await call('GET', '/groupchat')).json)
+  const ticket = group?.requirements?.[0]
+  const res = await call('POST', '/groupchat', { action: 'approve', group: 'proj', ticket: ticket?.id })
+  if (res.status !== 409 || res.json?.error !== 'not-awaiting') {
+    fail(`approving an unconverted ticket must be 409 not-awaiting, got ${res.status} ${JSON.stringify(res.json)}`)
+  }
+}
+
 if (process.exitCode === undefined || process.exitCode === 0) {
   console.log('SMOKE OK')
   console.log('tools:', [...tools.keys()].join(', '))
